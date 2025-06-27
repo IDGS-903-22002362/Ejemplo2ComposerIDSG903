@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -34,55 +35,60 @@ import com.lrosas.ejemplo2composeridsg903.ui.theme.Ejemplo2ComposerIDSG903Theme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "inicio"){
-                composable("inicio"){PantallaInicio(navController)}
-                composable("detalle/{nombre}"){backStackEntry ->
-                    val nombre = backStackEntry.arguments?.getString("nombre")?:"Invitado"
-                    PantallaDetalle(NavController,nombre)
-                }
-            }
-            }
+            OperacionesBasicas()//            val navController = rememberNavController()
+//            NavHost(navController = navController, startDestination = "inicio"){
+//                composable("inicio"){PantallaInicio(navController)}
+//                composable ("detalle/{nombre}"){
+//                        backStackEntry ->
+//                    val nombre = backStackEntry.arguments?.getString("nombre") ?: "Invitado"
+//                    PantallaDetalle(navController, nombre)
+//                }
+//            }
         }
     }
+}
 
 @Composable
-fun PantallaInicio(navController: NavController) {
+fun PantallaInicio(navController: NavHostController){
     var nombre by remember { mutableStateOf("") }
-    Column (modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center){
-        Text("Pantalla de inicio")
-        Spacer(modifier = Modifier.height(16.dp))
 
+    Column (
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Text("Pantalla de Inicio")
+        Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = nombre,
-            onValueChange = {nombre = it},
-            label = {Text("Introduce tu nombre")}
+            onValueChange = {nombre = it },
+            label = { Text ("Ingrese su nombre") },
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            val nombre = nombre.ifBlank { "Betillo" }
-            navController.navigate("detalle/$nombre")
+        Button( onClick = {
+            val nombre = nombre.ifBlank {"Cardiel"}
+            navController.navigate("detalle/{nombre}")
         }) {
-            Text("Ir a detalle")
+            Text("Ir a Detalle con nombre ")
         }
-
     }
 }
 
 @Composable
 fun PantallaDetalle(navController: NavHostController, nombre: String){
-   Column (modifier = Modifier.fillMaxSize(),
-       horizontalAlignment = Alignment.CenterHorizontally,
-       verticalArrangement = Arrangement.Center){
+    Column (
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
         Text("Hola, $nombre")
-        Button(onClick = { navController.navigate("inicio")}) {
+        Button(onClick = {navController.navigate("inicio")}) {
             Text("Volver")
         }
-   }
+    }
 }
 
 
